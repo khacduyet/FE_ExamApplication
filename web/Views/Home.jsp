@@ -14,8 +14,10 @@
     </head>
     <body>
         <h1>Hello World!</h1>
-        <c:forEach items="${user}" var="u">
-            <h2>${u}</h2>
-        </c:forEach>
+        <h2>${user}</h2>
+        <h2>HIHI ${u}</h2>
+        <form action="ClassServlet">
+            <button >Show class</button>
+        </form>
     </body>
 </html>

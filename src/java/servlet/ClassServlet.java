@@ -5,28 +5,19 @@
  */
 package servlet;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.sun.jersey.api.client.Client;
-import entities.Users;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Collection;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.UserModel;
 
 /**
  *
- * @author AdminDEV
+ * @author Admin
  */
-@WebServlet(name = "HomeServlet", urlPatterns = {"/HomeServlet"})
-public class HomeServlet extends HttpServlet {
+public class ClassServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,27 +30,9 @@ public class HomeServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setCharacterEncoding("UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        //gọi service lấy sản phẩm để hiển thị
-        String url = "http://localhost:8080/ExamApplication/api/login";
-        //tạo ra đối tượng client để gửi request lên service url
-        Client client = Client.create();
-        //lấy dữ liệu
-        //convert sang product
-        UserModel um = new UserModel();
-        um.setUsername("admin");
-        um.setPassword("12345");
-
-        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
-        String data = gson.toJson(um);
-        //post
-        String msg = client.resource(url).header("Content-Type", "application/json;charset=UTF-8").post(String.class, data);
-        Cookie cookie = new Cookie("authorization", msg);
-        response.addCookie(cookie);
-        response.addHeader("Authorization", msg);
-        //chuyển ra view
-        request.setAttribute("user", msg);
+        response.setContentType("text/html;charset=UTF-8");
+        String auth = response.getHeader("Authorization");
+        request.setAttribute("u", auth);
         request.setAttribute("VIEW", "Views/Home.jsp");
         RequestDispatcher rd = request.getRequestDispatcher("/MainPages.jsp");
         rd.forward(request, response);
