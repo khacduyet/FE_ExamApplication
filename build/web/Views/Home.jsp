@@ -4,6 +4,7 @@
     Author     : AdminDEV
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -13,5 +14,8 @@
     </head>
     <body>
         <h1>Hello World!</h1>
+        <c:forEach items="${user}" var="u">
+            <h2>${u}</h2>
+        </c:forEach>
     </body>
 </html>

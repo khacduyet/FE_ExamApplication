@@ -5,8 +5,13 @@
  */
 package servlet;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.sun.jersey.api.client.Client;
+import entities.Users;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -32,19 +37,20 @@ public class HomeServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet HomeServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet HomeServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        //gọi service lấy sản phẩm để hiển thị
+        String url = "http://localhost:8080/ExamApplication/api/user";
+        //tạo ra đối tượng client để gửi request lên service url
+        Client client = Client.create();
+        //lấy dữ liệu
+        String data = client.resource(url).get(String.class);
+        //convert sang product
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();
+        Collection<Users> user = gson.fromJson(data, Collection.class);
+        //chuyển ra view
+        request.setAttribute("user", user);
+        request.getRequestDispatcher("Home.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -59,7 +65,7 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setAttribute("VIEW","Views/Home.jsp");
+        request.setAttribute("VIEW", "Views/Home.jsp");
         RequestDispatcher rd = request.getRequestDispatcher("/MainPages.jsp");
         rd.forward(request, response);
     }
